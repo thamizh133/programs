@@ -1,0 +1,5 @@
+#pycache folders
+helloworld/helloworld/__pycache__
+helloworld/names/__pycache__
+helloworld/names/migrations
+

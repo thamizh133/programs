@@ -1,0 +1,39 @@
+<h2>Welcome, {{ sender }}</h2>
+
+<form method="get" action="{% url 'messages' %}">
+    <label>Select user to chat with:</label>
+    <select name="receiver" onchange="this.form.submit()">
+        <option value="">-- Select a user --</option>
+        {% for user in users %}
+            <option value="{{ user.username }}" {% if selected_user and user.username == selected_user.username %}selected{% endif %}>
+                {{ user.username }}
+            </option>
+        {% endfor %}
+    </select>
+</form>
+
+{% if selected_user %}
+    <h3>Chatting with {{ selected_user.username }}</h3>
+
+    <form method="post">
+        {% csrf_token %}
+        <input type="hidden" name="receiver" value="{{ selected_user.username }}">
+        <textarea name="content" required></textarea><br>
+        <button type="submit">Send</button>
+    </form>
+
+    <ul>
+        {% for msg in messages %}
+            <li>
+                <strong>{{ msg.sender.username }}:</strong> {{ msg.content }}
+                <small style="color:gray;">({{ msg.timestamp|date:"H:i:s" }})</small>
+            </li>
+        {% empty %}
+            <li>No messages yet.</li>
+        {% endfor %}
+    </ul>
+{% endif %}
+
+{% if error %}
+<p style="color:red;">{{ error }}</p>
+{% endif %}
